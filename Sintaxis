@@ -1,1 +1,46 @@
+# Instalar paquetes si no los tienes
+# install.packages(c("haven", "lme4", "performance", "lmerTest"))
 
+library(haven)       # para leer .sav
+library(lme4)        # para modelos multinivel
+library(performance) # para calcular ICC
+library(lmerTest)    # Significación estadística por Satterthwaite
+
+#  Fijar directorio
+#setwd("C:/Users/Malu/Desktop/SEMINARIO_INNOVA")
+#Leer archivo SPSS
+data <- read_sav("data.sav")
+
+# Ver primeras filas
+head(data)
+
+
+# Modelo nulo (sin predictores)
+modelo_nulo <- lmer(rendimiento ~ 1 + (1 | clase), data = data, REML = F)
+
+# Resumen del modelo
+summary(modelo_nulo)
+
+# Calcular ICC
+icc(modelo_nulo)
+
+
+# Modelo un predictor(nivel1) con intersección aleatoria y pendiente fija
+modelo_motiv <- lmer(rendimiento ~ motivacion + (1 | clase), data = data, REML = F)
+summary(modelo_motiv)
+
+# Modelo un predictor de nivel1 y otro de nivel 2 con intersección aleatoria y pendiente fija
+modelo_motiv_ingresos <- lmer(rendimiento ~ motivacion + ingresos_padres + (1 | clase), data = data, REML = F)
+summary(modelo_motiv_ingresos)
+
+# Modelo un predictor(nivel1) con intersección aleatoria y pendiente aleatoria
+modelo_pendiente_aleatoria <- lmer(rendimiento ~ motivacion + (1 + motivacion | clase), data = data, REML = F)
+summary(modelo_pendiente_aleatoria)
+
+# Modelo un predictor de nivel1 y otro de nivel 2 con intersección aleatoria y pendiente aleatorio
+modelo_motiv_ingresos_pend <- lmer(rendimiento ~ motivacion + ingresos_padres + 
+                                     (motivacion | clase), data = data, REML = F)
+summary(modelo_motiv_ingresos_pend)
+
+# Comparación de modelos 
+anova(modelo_nulo, modelo_motiv, modelo_pendiente_aleatoria, modelo_motiv_ingresos_pend)
