@@ -16,7 +16,7 @@ head(data)
 
 
 # Modelo nulo (sin predictores)
-modelo_nulo <- lmer(rendimiento ~ 1 + (1 | clase), data = data, REML = F)
+modelo_nulo <- lmer(rendimiento ~ (1 | clase), data = data, REML = F)
 
 # Resumen del modelo
 summary(modelo_nulo)
@@ -34,7 +34,7 @@ modelo_motiv_ingresos <- lmer(rendimiento ~ motivacion + ingresos_padres + (1 | 
 summary(modelo_motiv_ingresos)
 
 # Modelo un predictor(nivel1) con intersección aleatoria y pendiente aleatoria
-modelo_pendiente_aleatoria <- lmer(rendimiento ~ motivacion + (1 + motivacion | clase), data = data, REML = F)
+modelo_pendiente_aleatoria <- lmer(rendimiento ~ motivacion + (motivacion | clase), data = data, REML = F)
 summary(modelo_pendiente_aleatoria)
 
 # Modelo un predictor de nivel1 y otro de nivel 2 con intersección aleatoria y pendiente aleatorio
